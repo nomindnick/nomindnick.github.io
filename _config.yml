@@ -1,0 +1,64 @@
+remote_theme: "mmistakes/minimal-mistakes@4.26.2"
+minimal_mistakes_skin: "default"
+
+# Site settings
+title: "Experiments in Legal AI"
+subtitle: "Building and learning in public"
+name: "Nick Clair"
+description: "A blog about building AI tools, running experiments, and learning in public — from a California public agency attorney."
+url: "https://nomindnick.github.io"
+baseurl: ""
+
+# Author
+author:
+  name: "Nick Clair"
+  bio: "Attorney in California. Building AI things for public agency law — RAG apps, custom tools, and whatever experiment is next."
+  location: "California"
+
+# Reading
+words_per_minute: 200
+
+# Build settings
+markdown: kramdown
+highlighter: rouge
+
+# Outputting
+permalink: /:categories/:title/
+paginate: 10
+paginate_path: /page:num/
+timezone: America/Los_Angeles
+
+# Plugins
+plugins:
+  - jekyll-paginate
+  - jekyll-sitemap
+  - jekyll-gist
+  - jekyll-feed
+  - jekyll-include-cache
+
+# Archives
+category_archive:
+  type: liquid
+  path: /categories/
+tag_archive:
+  type: liquid
+  path: /tags/
+
+# Defaults
+defaults:
+  - scope:
+      path: ""
+      type: posts
+    values:
+      layout: single
+      author_profile: true
+      read_time: true
+      share: true
+      related: true
+      show_date: true
+  - scope:
+      path: "_pages"
+      type: pages
+    values:
+      layout: single
+      author_profile: true
