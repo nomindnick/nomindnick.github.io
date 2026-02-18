@@ -1,27 +1,13 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
 
-// Font family overrides
 $sans-serif: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
   "Helvetica Neue", Arial, sans-serif;
-
-html {
-  font-size: 14px;
-
-  @media (min-width: 768px) {
-    font-size: 15px;
-  }
-
-  @media (min-width: 1024px) {
-    font-size: 16px;
-  }
-}
 
 body {
   font-family: $sans-serif;
 }
 
 .page__content {
-  font-size: 1rem;
   line-height: 1.7;
 
   p {
@@ -34,22 +20,6 @@ h1, h2, h3, h4, h5, h6 {
   font-weight: 600;
 }
 
-.page__title {
-  font-size: 1.75em;
-}
-
-h2 {
-  font-size: 1.35em;
-}
-
-h3 {
-  font-size: 1.15em;
-}
-
 .author__name {
   font-family: $sans-serif;
-}
-
-.archive__item-title {
-  font-size: 1.1em;
 }
