@@ -7,6 +7,7 @@ tags:
   - search
   - claude-code
   - fppc
+excerpt: "I recently built a search engine for California FPPC advisory opinions. It works well — in my testing, it's significantly better than what the FPPC has on their website. But if you asked me to explain how it works, I'd struggle."
 ---
 
 I recently built a search engine for California FPPC advisory opinions. It works well — in my testing, it's significantly better than what the FPPC has on their website. But if you asked me to explain how it works, I'd struggle. This was the first project where I don't really understand a big part of what I built. Claude Code built it, Claude Code tested it, and Claude Code decided when it was done. I think I'm ok with that?

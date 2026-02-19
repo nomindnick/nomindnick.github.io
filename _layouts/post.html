@@ -1,0 +1,80 @@
+---
+layout: default
+---
+
+{% assign name_parts = site.author.name | split: ' ' %}
+{% assign words = content | number_of_words %}
+{% assign minutes = words | divided_by: site.words_per_minute %}
+{% if minutes < 1 %}{% assign minutes = 1 %}{% endif %}
+
+<div class="progress-bar" id="progress"></div>
+
+<header class="hero">
+  <div class="hero-label">{{ page.categories | first | default: 'Post' }}</div>
+  <h1>{{ page.title }}</h1>
+  <div class="hero-meta">
+    <a href="{{ '/' | relative_url }}" class="author-chip">
+      <span class="author-avatar">{{ name_parts[0] | slice: 0 }}{{ name_parts[1] | slice: 0 }}</span>
+      {{ site.author.name }}
+    </a>
+    <span class="dot"></span>
+    <span>{{ page.date | date: "%B %-d, %Y" }}</span>
+    <span class="dot"></span>
+    <span>{{ minutes }} min read</span>
+  </div>
+</header>
+
+<div class="divider post-divider"><hr class="divider-line"></div>
+
+<article class="article">
+  <div class="article-body">
+    {{ content }}
+  </div>
+</article>
+
+{% assign other_posts = site.posts | where_exp: "post", "post.url != page.url" %}
+{% if other_posts.size > 0 %}
+<div class="divider post-divider"><hr class="divider-line"></div>
+
+<section class="more-posts">
+  <h3>More Experiments</h3>
+  <div class="post-grid">
+    {% for post in other_posts limit:4 %}
+    <a class="post-card" href="{{ post.url | relative_url }}">
+      <div class="card-date">{{ post.date | date: "%B %Y" }}</div>
+      <div class="card-title">{{ post.title }}</div>
+      <div class="card-excerpt">{{ post.excerpt | strip_html | truncatewords: 25 }}</div>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<script>
+  // Reading progress bar
+  const progress = document.getElementById('progress');
+  window.addEventListener('scroll', () => {
+    const scrollTop = window.scrollY;
+    const docHeight = document.documentElement.scrollHeight - window.innerHeight;
+    if (docHeight > 0) {
+      progress.style.width = (scrollTop / docHeight) * 100 + '%';
+    }
+  });
+
+  // Animate elements on scroll
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.post-card, blockquote, .highlight').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(15px)';
+    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    observer.observe(el);
+  });
+</script>

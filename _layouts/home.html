@@ -1,0 +1,126 @@
+---
+layout: default
+---
+
+{% assign name_parts = site.author.name | split: ' ' %}
+
+<!-- MASTHEAD -->
+<header class="masthead">
+  <div class="masthead-left">
+    <div class="masthead-label">Blog</div>
+    <h1>{{ site.title_html | default: site.title }}</h1>
+  </div>
+  <div class="masthead-right">
+    <p class="masthead-bio">{{ site.author.bio }}</p>
+    <div class="masthead-meta">
+      <span class="author-chip">
+        <span class="author-avatar">{{ name_parts[0] | slice: 0 }}{{ name_parts[1] | slice: 0 }}</span>
+        {{ site.author.name }}
+      </span>
+      <span class="location-tag">
+        <svg viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+        {{ site.author.location }}
+      </span>
+      <a href="{{ '/feed.xml' | relative_url }}" class="rss-link">
+        <svg viewBox="0 0 24 24"><circle cx="6.18" cy="17.82" r="2.18"/><path d="M4 4.44v2.83c7.03 0 12.73 5.7 12.73 12.73h2.83c0-8.59-6.97-15.56-15.56-15.56z"/><path d="M4 10.1v2.83c3.9 0 7.07 3.17 7.07 7.07h2.83c0-5.47-4.43-9.9-9.9-9.9z"/></svg>
+        Feed
+      </a>
+    </div>
+  </div>
+</header>
+
+<div class="divider"><hr class="divider-line"></div>
+
+{% assign featured = site.posts.first %}
+{% if featured %}
+
+<!-- FEATURED POST -->
+<section class="featured-section">
+  <div class="section-label">Latest</div>
+  <a href="{{ featured.url | relative_url }}" class="featured-card">
+    <div class="featured-visual">
+      <div class="search-viz">
+        <div class="search-bar">
+          <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <span class="search-text">can a council member vote on...</span>
+        </div>
+        <div class="search-results">
+          <div class="search-result-line">
+            <span class="result-score">0.94</span>
+            <span class="result-text">FPPC Opinion A-15-123 — Voting conflicts arising from proximity...</span>
+          </div>
+          <div class="search-result-line">
+            <span class="result-score">0.89</span>
+            <span class="result-text">FPPC Opinion I-02-047 — Financial interest in neighbor's property...</span>
+          </div>
+          <div class="search-result-line">
+            <span class="result-score">0.82</span>
+            <span class="result-text">FPPC Opinion A-98-201 — Recusal requirements for adjacent parcels...</span>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="featured-content">
+      {% assign words = featured.content | number_of_words %}
+      {% assign minutes = words | divided_by: site.words_per_minute %}
+      {% if minutes < 1 %}{% assign minutes = 1 %}{% endif %}
+      <div class="featured-date">{{ featured.date | date: "%B %-d, %Y" }} &middot; {{ minutes }} min read</div>
+      <div class="featured-title">{{ featured.title }}</div>
+      <div class="featured-excerpt">{{ featured.excerpt | strip_html | truncatewords: 40 }}</div>
+      <div class="read-link">
+        Read post
+        <svg viewBox="0 0 24 24"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+      </div>
+    </div>
+  </a>
+</section>
+
+{% endif %}
+
+{% assign other_posts = site.posts | slice: 1, 100 %}
+{% if other_posts.size > 0 %}
+
+<!-- OLDER POSTS -->
+<section class="posts-section">
+  <div class="section-label">Archive</div>
+  <div class="post-list">
+    {% for post in other_posts %}
+    <a href="{{ post.url | relative_url }}" class="post-item">
+      <div class="post-date">{{ post.date | date: "%b %Y" }}</div>
+      <div class="post-info">
+        <div class="post-title">{{ post.title }}</div>
+        <div class="post-excerpt">{{ post.excerpt | strip_html | truncatewords: 30 }}</div>
+        {% if post.tags.size > 0 %}
+        <div class="post-tags">
+          {% for tag in post.tags %}
+          <span class="tag">{{ tag }}</span>
+          {% endfor %}
+        </div>
+        {% endif %}
+      </div>
+    </a>
+    {% endfor %}
+  </div>
+</section>
+
+{% endif %}
+
+<script>
+  // Staggered entrance animations
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry, i) => {
+      if (entry.isIntersecting) {
+        entry.target.style.transitionDelay = (i * 0.06) + 's';
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 'translateY(0)';
+      }
+    });
+  }, { threshold: 0.05 });
+
+  document.querySelectorAll('.post-item, .featured-card').forEach(el => {
+    el.style.opacity = '0';
+    el.style.transform = 'translateY(15px)';
+    el.style.transition = 'opacity 0.5s ease, transform 0.5s ease';
+    observer.observe(el);
+  });
+</script>
