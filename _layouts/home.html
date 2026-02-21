@@ -39,6 +39,9 @@ layout: default
   <div class="section-label">Latest</div>
   <a href="{{ featured.url | relative_url }}" class="featured-card">
     <div class="featured-visual">
+      {% if featured.title contains "Back to the Corpus" %}
+      {% include ocr-animation.html %}
+      {% else %}
       <div class="search-viz">
         <div class="search-bar">
           <svg viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
@@ -59,6 +62,7 @@ layout: default
           </div>
         </div>
       </div>
+      {% endif %}
     </div>
     <div class="featured-content">
       {% assign words = featured.content | number_of_words %}

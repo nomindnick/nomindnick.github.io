@@ -1,0 +1,140 @@
+<div class="ocr-demo" id="ocrDemo">
+  <div class="ocr-page">
+    <div class="ocr-scan-line" id="ocrScanLine"></div>
+
+    <div class="ocr-doc-header">
+      Fair Political Practices <span>Commission</span> · Advisory Opinion No. 92-445
+    </div>
+
+    <div class="ocr-text-lines" id="ocrTextBlock">
+      <div class="ocr-text-line">
+        The <span class="ocr-swap" data-corrupted="Cornrnission" data-clean="Commission"></span> has considered your request for an
+      </div>
+      <div class="ocr-text-line">
+        advisory opinion regarding the <span class="ocr-swap" data-corrupted="Poritical" data-clean="Political"></span> Reform Act
+      </div>
+      <div class="ocr-text-line">
+        of 1974 (the "<span class="ocr-swap" data-corrupted="Acl" data-clean="Act"></span>"). Specifically, you ask whether a <span class="ocr-swap" data-corrupted="rnernber" data-clean="member"></span>
+      </div>
+      <div class="ocr-text-line">
+        of the <span class="ocr-swap" data-corrupted="Califomia" data-clean="California"></span> State <span class="ocr-swap" data-corrupted="Legis1ature" data-clean="Legislature"></span> may accept
+      </div>
+      <div class="ocr-text-line">
+        travel <span class="ocr-swap" data-corrupted="payrnents" data-clean="payments"></span> from a <span class="ocr-swap" data-corrupted="nonproiit" data-clean="nonprofit"></span> <span class="ocr-swap" data-corrupted="organizalion" data-clean="organization"></span>
+      </div>
+      <div class="ocr-text-line">
+        under Section 89506 of the <span class="ocr-swap" data-corrupted="Govemment" data-clean="Government"></span> Code.
+      </div>
+    </div>
+
+    <div class="ocr-score-bar">
+      <div class="ocr-score-label">v3 score</div>
+      <div class="ocr-score-track">
+        <div class="ocr-threshold-label">0.80</div>
+        <div class="ocr-threshold-marker"></div>
+        <div class="ocr-score-fill" id="ocrScoreFill"></div>
+      </div>
+      <div class="ocr-score-value" id="ocrScoreValue">0.58</div>
+    </div>
+  </div>
+
+  <div class="ocr-cycle-indicator">
+    <span class="ocr-phase" id="ocrPhaseLabel">native extraction · degraded</span>
+  </div>
+</div>
+
+<script>
+(function() {
+  // Build swap elements
+  document.querySelectorAll('#ocrDemo .ocr-swap').forEach(function(el) {
+    var corrupted = el.dataset.corrupted;
+    var clean = el.dataset.clean;
+
+    var corruptedSpan = document.createElement('span');
+    corruptedSpan.className = 'ocr-corrupted';
+    corruptedSpan.textContent = corrupted;
+
+    var cleanSpan = document.createElement('span');
+    cleanSpan.className = 'ocr-clean';
+    cleanSpan.textContent = clean;
+
+    el.appendChild(corruptedSpan);
+    el.appendChild(cleanSpan);
+  });
+
+  var scanLine = document.getElementById('ocrScanLine');
+  var scoreFill = document.getElementById('ocrScoreFill');
+  var scoreValue = document.getElementById('ocrScoreValue');
+  var phaseLabel = document.getElementById('ocrPhaseLabel');
+  var swaps = document.querySelectorAll('#ocrDemo .ocr-swap');
+
+  var SWEEP_DURATION = 3500;
+  var PAUSE_CORRUPTED = 2500;
+  var PAUSE_CLEAN = 2500;
+
+  function getSwapPositions() {
+    var container = document.querySelector('.ocr-page');
+    var containerRect = container.getBoundingClientRect();
+    var containerWidth = containerRect.width;
+
+    return Array.from(swaps).map(function(swap) {
+      var rect = swap.getBoundingClientRect();
+      var relativeLeft = (rect.left - containerRect.left) / containerWidth;
+      return { el: swap, position: relativeLeft };
+    }).sort(function(a, b) { return a.position - b.position; });
+  }
+
+  function runCycle() {
+    swaps.forEach(function(s) { s.classList.remove('fixed'); });
+    scoreFill.classList.remove('improved');
+    scoreValue.classList.remove('improved');
+    scoreFill.style.width = '58%';
+    scoreValue.textContent = '0.58';
+    phaseLabel.textContent = 'native extraction \u00b7 degraded';
+    phaseLabel.classList.remove('clean-phase');
+    scanLine.classList.remove('active');
+
+    setTimeout(function() {
+      scanLine.classList.add('active');
+
+      var sortedSwaps = getSwapPositions();
+
+      sortedSwaps.forEach(function(item) {
+        var delay = item.position * SWEEP_DURATION;
+        setTimeout(function() {
+          item.el.classList.add('fixed');
+        }, delay);
+      });
+
+      setTimeout(function() {
+        scoreFill.classList.add('improved');
+        scoreValue.classList.add('improved');
+        scoreValue.textContent = '0.92';
+        phaseLabel.textContent = 'olmOCR-2 \u00b7 clean';
+        phaseLabel.classList.add('clean-phase');
+        scanLine.classList.remove('active');
+      }, SWEEP_DURATION + 200);
+
+      setTimeout(function() {
+        runCycle();
+      }, SWEEP_DURATION + 200 + PAUSE_CLEAN);
+    }, PAUSE_CORRUPTED);
+  }
+
+  // Start when visible
+  var demoEl = document.getElementById('ocrDemo');
+  if ('IntersectionObserver' in window) {
+    var obs = new IntersectionObserver(function(entries) {
+      entries.forEach(function(entry) {
+        if (entry.isIntersecting) {
+          obs.unobserve(demoEl);
+          setTimeout(runCycle, 400);
+        }
+      });
+    }, { threshold: 0.3 });
+    obs.observe(demoEl);
+  } else {
+    setTimeout(runCycle, 800);
+  }
+})();
+</script>
