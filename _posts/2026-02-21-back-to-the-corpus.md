@@ -7,6 +7,7 @@ tags:
   - ocr
   - data-quality
   - fppc
+animation: ocr
 excerpt: "The FPPC corpus had bigger quality problems than I expected. After benchmarking OCR engines and re-extracting 2,867 documents, corpus usability went from 79.4% to 98.6%."
 ---
 

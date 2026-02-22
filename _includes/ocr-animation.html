@@ -1,12 +1,12 @@
-<div class="ocr-demo" id="ocrDemo">
+<div class="ocr-demo">
   <div class="ocr-page">
-    <div class="ocr-scan-line" id="ocrScanLine"></div>
+    <div class="ocr-scan-line"></div>
 
     <div class="ocr-doc-header">
       Fair Political Practices <span>Commission</span> · Advisory Opinion No. 92-445
     </div>
 
-    <div class="ocr-text-lines" id="ocrTextBlock">
+    <div class="ocr-text-lines">
       <div class="ocr-text-line">
         The <span class="ocr-swap" data-corrupted="Cornrnission" data-clean="Commission"></span> has considered your request for an
       </div>
@@ -32,21 +32,28 @@
       <div class="ocr-score-track">
         <div class="ocr-threshold-label">0.80</div>
         <div class="ocr-threshold-marker"></div>
-        <div class="ocr-score-fill" id="ocrScoreFill"></div>
+        <div class="ocr-score-fill"></div>
       </div>
-      <div class="ocr-score-value" id="ocrScoreValue">0.58</div>
+      <div class="ocr-score-value">0.58</div>
     </div>
   </div>
 
   <div class="ocr-cycle-indicator">
-    <span class="ocr-phase" id="ocrPhaseLabel">native extraction · degraded</span>
+    <span class="ocr-phase">native extraction · degraded</span>
   </div>
 </div>
 
 <script>
 (function() {
-  // Build swap elements
-  document.querySelectorAll('#ocrDemo .ocr-swap').forEach(function(el) {
+  // Find the last .ocr-demo on the page (the one just inserted)
+  var demos = document.querySelectorAll('.ocr-demo');
+  var demo = demos[demos.length - 1];
+  if (demo.dataset.initialized) return;
+  demo.dataset.initialized = 'true';
+
+  // Build swap elements within this instance
+  demo.querySelectorAll('.ocr-swap').forEach(function(el) {
+    if (el.children.length > 0) return; // already built
     var corrupted = el.dataset.corrupted;
     var clean = el.dataset.clean;
 
@@ -62,19 +69,19 @@
     el.appendChild(cleanSpan);
   });
 
-  var scanLine = document.getElementById('ocrScanLine');
-  var scoreFill = document.getElementById('ocrScoreFill');
-  var scoreValue = document.getElementById('ocrScoreValue');
-  var phaseLabel = document.getElementById('ocrPhaseLabel');
-  var swaps = document.querySelectorAll('#ocrDemo .ocr-swap');
+  var scanLine = demo.querySelector('.ocr-scan-line');
+  var scoreFill = demo.querySelector('.ocr-score-fill');
+  var scoreValue = demo.querySelector('.ocr-score-value');
+  var phaseLabel = demo.querySelector('.ocr-phase');
+  var swaps = demo.querySelectorAll('.ocr-swap');
+  var page = demo.querySelector('.ocr-page');
 
   var SWEEP_DURATION = 3500;
   var PAUSE_CORRUPTED = 2500;
   var PAUSE_CLEAN = 2500;
 
   function getSwapPositions() {
-    var container = document.querySelector('.ocr-page');
-    var containerRect = container.getBoundingClientRect();
+    var containerRect = page.getBoundingClientRect();
     var containerWidth = containerRect.width;
 
     return Array.from(swaps).map(function(swap) {
@@ -122,17 +129,16 @@
   }
 
   // Start when visible
-  var demoEl = document.getElementById('ocrDemo');
   if ('IntersectionObserver' in window) {
     var obs = new IntersectionObserver(function(entries) {
       entries.forEach(function(entry) {
         if (entry.isIntersecting) {
-          obs.unobserve(demoEl);
+          obs.unobserve(demo);
           setTimeout(runCycle, 400);
         }
       });
-    }, { threshold: 0.3 });
-    obs.observe(demoEl);
+    }, { threshold: 0.2 });
+    obs.observe(demo);
   } else {
     setTimeout(runCycle, 800);
   }
