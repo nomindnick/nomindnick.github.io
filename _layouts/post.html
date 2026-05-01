@@ -2,16 +2,21 @@
 layout: default
 ---
 
-{% assign words = content | number_of_words %}
-{% assign minutes = words | divided_by: site.words_per_minute %}
+{% assign body_words = content | strip_html | number_of_words %}
+{% assign minutes = body_words | divided_by: site.words_per_minute %}
 {% if minutes < 1 %}{% assign minutes = 1 %}{% endif %}
 
 <div class="page">
   <article class="entry post">
     <aside class="entry-margin post-margin">
       <p class="margin-back"><a href="{{ '/' | relative_url }}">&larr; Index</a></p>
-      <time class="margin-date" datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%-d %B %Y" }}</time>
+      <time class="margin-date" datetime="{{ page.date | date_to_xmlschema }}">{{ page.date | date: "%-d %b %Y" }}</time>
       <span class="margin-meta">{{ minutes }} min read</span>
+      {% if page.tags.size > 0 %}
+      <p class="margin-tags">
+        {% for tag in page.tags %}<a href="{{ '/tags/' | relative_url }}#{{ tag | slugify }}">{{ tag }}</a>{% unless forloop.last %} <span class="tag-sep" aria-hidden="true">·</span> {% endunless %}{% endfor %}
+      </p>
+      {% endif %}
     </aside>
 
     <div class="entry-main post-main">
@@ -31,11 +36,11 @@ layout: default
     </div>
     <div class="entry-main">
       <ul class="fr-list">
-        {% for post in other_posts limit: 4 %}
+        {% for post in other_posts limit: 5 %}
         <li class="fr-item">
           <a href="{{ post.url | relative_url }}" class="fr-link">
             <span class="fr-title">{{ post.title }}</span>
-            <time class="fr-date" datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%b %Y" }}</time>
+            <time class="fr-date" datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%-d %b %Y" }}</time>
           </a>
         </li>
         {% endfor %}
