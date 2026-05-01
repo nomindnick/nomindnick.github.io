@@ -191,12 +191,6 @@ em, i { font-style: italic; }
   margin-bottom: 0.1rem;
 }
 
-.margin-meta {
-  display: block;
-  font-feature-settings: "onum" 1;
-  letter-spacing: 0.005em;
-}
-
 .margin-tags {
   margin: 0.55rem 0 0;
   font-style: normal;
@@ -805,14 +799,8 @@ em, i { font-style: italic; }
     gap: 0 0.65rem;
   }
 
-  .margin-date,
-  .margin-meta {
+  .margin-date {
     display: inline;
-  }
-  .margin-meta::before {
-    content: "·";
-    margin-right: 0.55rem;
-    color: var(--hairline-2);
   }
 
   .margin-tags {
