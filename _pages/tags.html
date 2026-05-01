@@ -1,0 +1,42 @@
+---
+layout: default
+title: "Tags"
+permalink: /tags/
+---
+
+<div class="page">
+  <header class="masthead tags-masthead">
+    <p class="margin-back"><a href="{{ '/' | relative_url }}">&larr; Index</a></p>
+    <h1 class="site-title">Tags</h1>
+    {% assign all_tags = site.tags | sort %}
+    {% if all_tags.size > 0 %}
+    <nav class="tag-cloud" aria-label="All tags">
+      {% for tag in all_tags %}
+      <a href="#{{ tag[0] | slugify }}" class="tag-cloud-item">{{ tag[0] }}<span class="tag-count">{{ tag[1].size }}</span></a>{% unless forloop.last %} <span class="tag-cloud-sep" aria-hidden="true">·</span> {% endunless %}
+      {% endfor %}
+    </nav>
+    {% else %}
+    <p class="site-bio">No tags yet.</p>
+    {% endif %}
+  </header>
+
+  <main class="tags-archive">
+    {% for tag in all_tags %}
+    <section class="tag-section" id="{{ tag[0] | slugify }}">
+      <h2 class="tag-heading">
+        <span class="tag-heading-name">{{ tag[0] }}</span>
+        <span class="tag-heading-count">{{ tag[1].size }} {% if tag[1].size == 1 %}post{% else %}posts{% endif %}</span>
+      </h2>
+      <ul class="tag-post-list">
+        {% assign sorted_posts = tag[1] | sort: 'date' | reverse %}
+        {% for post in sorted_posts %}
+        <li class="tag-post-item">
+          <time class="tag-post-date" datetime="{{ post.date | date_to_xmlschema }}">{{ post.date | date: "%-d %b %Y" }}</time>
+          <a href="{{ post.url | relative_url }}" class="tag-post-link">{{ post.title }}</a>
+        </li>
+        {% endfor %}
+      </ul>
+    </section>
+    {% endfor %}
+  </main>
+</div>

@@ -21,6 +21,10 @@ words_per_minute: 200
 markdown: kramdown
 highlighter: rouge
 
+# Disable the default jekyll-theme-primer that github-pages auto-loads,
+# so our custom layouts and assets/css/style.css aren't overridden.
+theme:
+
 # Include underscore-prefixed directories
 include:
   - _pages
